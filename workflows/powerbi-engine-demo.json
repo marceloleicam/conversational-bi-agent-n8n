@@ -1,0 +1,235 @@
+{
+  "name": "Power BI Query Engine - Public Demo",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Demonstration only\n\nThe production DAX libraries, tenant/workspace/dataset identifiers, authentication flow, model mappings and business rules are intentionally omitted.",
+        "height": 260,
+        "width": 440
+      },
+      "id": "note-engine-demo",
+      "name": "Portfolio Notice",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "portfolio-powerbi-engine-demo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "engine-webhook",
+      "name": "Receive Analytics Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        120
+      ],
+      "webhookId": "public-engine-demo-placeholder"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body ?? $json;\n\nreturn [{\n  json: {\n    metric: String(body.metric ?? 'revenue'),\n    period: String(body.period ?? 'last_month'),\n    dimensions: Array.isArray(body.dimensions) ? body.dimensions : ['date'],\n    filters: body.filters ?? { company: 'Company A' }\n  }\n}];"
+      },
+      "id": "validate-engine",
+      "name": "Validate and Normalize Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "model-selector",
+      "name": "Model Selector - Mapping Omitted",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "dax-builder",
+      "name": "DAX Builder - Library Omitted",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        180,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "powerbi-api",
+      "name": "Power BI REST API - Credentials Omitted",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        440,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    queryStatus: 'demo',\n    columns: ['period', 'value'],\n    rows: [\n      { period: 'Week 1', value: 125000 },\n      { period: 'Week 2', value: 139500 },\n      { period: 'Week 3', value: 147200 }\n    ],\n    dataClassification: 'fictional-sample'\n  }\n}];"
+      },
+      "id": "normalize-result",
+      "name": "Normalize Fictional Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "insight-generator",
+      "name": "Executive Insight Generator - Prompt Omitted",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        960,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    status: 'demo',\n    insight: 'The fictional sample shows a positive weekly trend.',\n    data: $json.rows,\n    disclaimer: 'No production data, DAX, endpoint or credential is included.'\n  }\n}];"
+      },
+      "id": "package-engine",
+      "name": "Package Demo Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-engine",
+      "name": "Return Analytics Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1480,
+        120
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Analytics Request": {
+      "main": [
+        [
+          {
+            "node": "Validate and Normalize Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Normalize Request": {
+      "main": [
+        [
+          {
+            "node": "Model Selector - Mapping Omitted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model Selector - Mapping Omitted": {
+      "main": [
+        [
+          {
+            "node": "DAX Builder - Library Omitted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DAX Builder - Library Omitted": {
+      "main": [
+        [
+          {
+            "node": "Power BI REST API - Credentials Omitted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Power BI REST API - Credentials Omitted": {
+      "main": [
+        [
+          {
+            "node": "Normalize Fictional Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Fictional Result": {
+      "main": [
+        [
+          {
+            "node": "Executive Insight Generator - Prompt Omitted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executive Insight Generator - Prompt Omitted": {
+      "main": [
+        [
+          {
+            "node": "Package Demo Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Package Demo Output": {
+      "main": [
+        [
+          {
+            "node": "Return Analytics Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-4000-8000-000000000002",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

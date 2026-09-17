@@ -1,0 +1,27 @@
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.secret.*
+secrets/
+credentials/
+
+# Private n8n material
+.n8n/
+exports-private/
+workflows-private/
+production-exports/
+*.production.json
+
+# Local and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Dependencies
+node_modules/
